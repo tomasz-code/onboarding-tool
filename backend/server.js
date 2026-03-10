@@ -106,7 +106,8 @@ JSON-Struktur:
 
     let worksheetData;
     try {
-      const raw = extractionResponse.content[0].text.trim();
+      let raw = extractionResponse.content[0].text.trim();
+      raw = raw.replace(/^```json\s*/i, '').replace(/^```\s*/i, '').replace(/\s*```$/i, '').trim();
       worksheetData = JSON.parse(raw);
     } catch {
       return res.status(500).json({ error: 'JSON-Parsing fehlgeschlagen', raw: extractionResponse.content[0].text });
@@ -117,6 +118,10 @@ JSON-Struktur:
 
     // Schritt 3: In Google Drive hochladen
     const fileName = `Onboarding_${worksheetData.zielgruppe_name || 'Kunde'}_${new Date().toISOString().slice(0,10)}.docx`;
+
+    if (!drive) {
+      return res.status(500).json({ error: 'Google Drive nicht konfiguriert.' });
+    }
 
     const { Readable } = require('stream');
     const stream = Readable.from(docBuffer);
