@@ -12,12 +12,20 @@ app.use(express.json({ limit: '2mb' }));
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
 // ─── Google Drive Auth ────────────────────────────────────────────────────────
-const auth = new google.auth.GoogleAuth({
-  credentials: JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_JSON),
-  scopes: ['https://www.googleapis.com/auth/drive.file'],
-});
-const drive = google.drive({ version: 'v3', auth });
-const DRIVE_FOLDER_ID = process.env.GOOGLE_DRIVE_FOLDER_ID; // Ordner-ID aus Google Drive URL
+let drive = null;
+const DRIVE_FOLDER_ID = process.env.GOOGLE_DRIVE_FOLDER_ID;
+
+if (process.env.GOOGLE_SERVICE_ACCOUNT_JSON) {
+  try {
+    const auth = new google.auth.GoogleAuth({
+      credentials: JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_JSON),
+      scopes: ['https://www.googleapis.com/auth/drive.file'],
+    });
+    drive = google.drive({ version: 'v3', auth });
+  } catch (e) {
+    console.warn('Google Drive nicht konfiguriert:', e.message);
+  }
+}
 
 // ─── /chat  ───────────────────────────────────────────────────────────────────
 app.post('/chat', async (req, res) => {
