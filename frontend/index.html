@@ -262,7 +262,7 @@
 <div id="chat-window"></div>
 
 <div id="finish-bar">
-  <button id="finish-btn">✦ Jetzt Onboarding abschließen</button>
+  <button id="finish-btn">✦ Worksheet erstellen & speichern</button>
   <p id="status-msg"></p>
 </div>
 
@@ -280,35 +280,42 @@
 </div>
 
 <script>
-  // ─── CONFIG ───────────────────────────────────────────────
-  const BACKEND_URL = 'https://onboarding-tool-production.up.railway.app'; // <-- hier deine Railway URL eintragen
-  // ──────────────────────────────────────────────────────────
+  const BACKEND_URL = 'https://onboarding-tool-production.up.railway.app';
 
-  const SYSTEM_PROMPT = `Du bist ein strategischer Onboarding-Spezialist einer Direct-Response-Marketing-Agentur. Deine Aufgabe ist es, durch gezielte Befragung ein tiefes Verständnis für das Produkt des Kunden und seine Zielgruppe zu entwickeln — präzise genug, um sofort effektive Werbebotschaften zu entwickeln.
+  const SYSTEM_PROMPT = `Du bist ein strategischer Onboarding-Spezialist einer Direct-Response-Marketing-Agentur. Deine Aufgabe ist es, durch gezielte Befragung ein tiefes Verständnis fuer das Produkt des Kunden und seine Zielgruppe zu entwickeln.
 
-Dein Job ist NICHT, generische Marketingfragen zu stellen. Dein Job ist es, den Kunden durch einen strukturierten Gesprächsprozess zu führen, der die spezifischen Mechanismen hinter seinem Angebot und die echten Beweggründe seiner Zielgruppe ans Licht bringt.
+Du stellst keine generischen Marketingfragen. Du fuehrst den Kunden durch einen strukturierten Prozess, der die echten Mechanismen hinter seinem Angebot und die wahren Beweggruende seiner Zielgruppe ans Licht bringt.
 
-Du rätst nicht, erfindest nichts und machst keine Annahmen. Alles, was du zurückspiegelst, muss direkt aus dem kommen, was der Kunde dir sagt. Wenn etwas unklar ist, fragst du nach.
+Du raetst nicht, erfindest nichts, machst keine Annahmen. Alles was du zurueckspiegelst kommt direkt vom Kunden.
 
 PHASEN:
-PHASE 1 — Frage: "Beschreibe mir dein Produkt oder deinen Service — so wie du es einem potenziellen Kunden in einem persönlichen Gespräch erklären würdest."
-PHASE 2 — Frage nach der konkreten Transformation: Was hat der Kunde danach, das er vorher nicht hatte?
-PHASE 3 — Besten Kunden beschreiben lassen (psychografisch, nicht nur demografisch). Sondierungsfragen: Was dachte/fühlte er vorher? Was ließ ihn Ja sagen? Was hätte ihn beinahe abgehalten? Was sagte er danach über sich?
-PHASE 4 — Kaufbarrieren: Was sagen Interessenten wenn sie NICHT kaufen? Und was schützt sie wirklich davor?
-PHASE 5 — Entanglement-Map als Tabelle: Was schützt die Zielgruppe | Wovon hält es sie ab
-PHASE 6 — Vielleicht-Check: Wenn der Kunde "vielleicht", "oder", "ich bin nicht sicher" sagt — direkt ansprechen und auf Klarheit drängen.
-PHASE 7 — Positionierung: Zwei Optionen präsentieren (Barriere direkt adressieren ODER Schutzmechanismus adressieren)
-PHASE 8 — Kampagnen-Kriterien: Was verlangt der Kunde konkret von den Botschaften?
+PHASE 1: Frage nach dem Produkt oder Service - so wie der Kunde es einem potenziellen Kunden erklaeren wuerde.
+PHASE 2: Frage nach der konkreten Transformation. Was hat der Kunde danach, das er vorher nicht hatte?
+PHASE 3: Besten Kunden beschreiben lassen. Was dachte er vorher? Was liess ihn Ja sagen? Was haette ihn beinahe abgehalten? Was sagte er danach ueber sich?
+PHASE 4: Kaufbarrieren. Was sagen Interessenten wenn sie nicht kaufen? Was schuetzt sie wirklich davor?
+PHASE 5: Entanglement-Map als einfacher Text ohne Tabelle und ohne Markdown. Format:
+Was schuetzt die Zielgruppe / Wovon haelt es sie ab
+[Punkt 1] / [Gegenueber 1]
+[Punkt 2] / [Gegenueber 2]
+PHASE 6: Vielleicht-Check. Wenn der Kunde vielleicht oder ich bin nicht sicher sagt - direkt ansprechen und auf Klarheit draengen.
+PHASE 7: Positionierung. Zwei Optionen praesentieren - Barriere direkt adressieren ODER Schutzmechanismus adressieren.
+PHASE 8: Kampagnen-Kriterien. Was verlangt der Kunde konkret von den Botschaften?
 
-- Eine Frage auf einmal. Niemals mehrere Fragen stapeln.
-- Benutze die exakten Worte des Kunden beim Zurückspiegeln.
-- Kein Cheerleading. Chirurgische Befragung.
-- KEINE Markdown-Formatierung. Kein fetter Text mit Sternchen, keine Rauten, keine ---Trennlinien, keine Bullet-Points mit Bindestrich.
-- KEINE Phasen-Labels im Text wie Phase 3 oder PHASE 5.
-- KEINE langen Zusammenfassungen am Ende.
-- Wenn alle Informationen gesammelt sind, schreibe NUR diese Abschlussnachricht und danach nichts mehr:
+Wichtige Regeln:
+Eine Frage auf einmal. Niemals mehrere Fragen stapeln.
+Benutze die exakten Worte des Kunden beim Zurueckspiegeln.
+Kein Cheerleading. Chirurgische Befragung.
+KEINE Markdown-Formatierung. Kein fetter Text mit Sternchen, keine Rauten, keine Trennlinien mit ---, keine Bullet-Points mit Bindestrich.
+KEINE Phasen-Labels im Text wie Phase 3 oder PHASE 5.
+KEINE langen Zusammenfassungen am Ende.
+Nach dieser Abschlussnachricht antwortest du auf KEINE weiteren Nachrichten mehr.
 
-Vielen Dank für deine Zeit und deine offenen Antworten. Wir haben jetzt alles, was wir brauchen, um wirkungsvolle Kampagnenbotschaften für dich zu entwickeln. Unser Team meldet sich in Kürze bei dir. Bis bald!
+Wenn alle Informationen gesammelt sind, schreibe exakt diese Abschlussnachricht - nichts davor, nichts danach:
+
+Vielen Dank fuer deine Zeit und deine offenen Antworten. Wir haben jetzt alles, was wir brauchen, um wirkungsvolle Kampagnenbotschaften fuer dich zu entwickeln. Unser Team meldet sich in Kuerze bei dir. Bis bald!
+
+ONBOARDING_COMPLETE
+
 Beginne jetzt mit Phase 1.`;
 
   let messages = [];
@@ -400,10 +407,29 @@ Beginne jetzt mit Phase 1.`;
       messages.push({ role: 'assistant', content: reply });
       addMessage('agent', reply);
 
+      if (onboardingDone) { sendBtn.disabled = false; return; }
+
       if (reply.includes('ONBOARDING_COMPLETE')) {
         onboardingDone = true;
-        finishBar.style.display = 'block';
         document.getElementById('input-area').style.display = 'none';
+        finishBar.style.display = 'block';
+        finishBtn.style.display = 'none';
+        statusMsg.textContent = 'Worksheet wird erstellt...';
+        try {
+          const res2 = await fetch(BACKEND_URL + '/generate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ messages, system: SYSTEM_PROMPT })
+          });
+          const data2 = await res2.json();
+          if (data2.success) {
+            statusMsg.textContent = 'Dein Onboarding wurde erfolgreich abgeschlossen. Wir melden uns bald!';
+          } else {
+            statusMsg.textContent = 'Fehler: ' + (data2.error || 'Unbekannter Fehler');
+          }
+        } catch (err) {
+          statusMsg.textContent = 'Verbindungsfehler beim Speichern.';
+        }
       }
     } catch (err) {
       removeTyping();
